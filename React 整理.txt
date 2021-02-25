@@ -80,9 +80,10 @@ BrowserRouter与HashRouter的区别
     PubSubJS 事件发布订阅js，组件之间灵活通信
     redux: 独立于其他组件，集中式状态管理
 
-redux
+redux(第三方)
     ReactComponent -> ActionCreators -> Store     (dispatch(Action))
     Store -> Reducers                             (真正处理，接收旧状态和action)
     Reducers -> Store                             (返回新状态)
     Store -> ReactComponent                       ( getState )
 
+    后面FaceBook自己出了官方的 react-redux

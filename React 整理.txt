@@ -1,0 +1,88 @@
+React 整理
+
+<BrowserRouter>
+    //路由
+	<Link to=“/abount”>Abount</Link>
+	..
+	<Redirect to=“/abount” /> 重定向,当找不到匹配的路径时重定向到/abount
+
+    // 路由组件
+	<Router path=“/abount” component={Abount} />
+</BrowserRouter>
+
+BrowserRouter 不带’#’, 
+HashRouter带’#’, #/user/search  #后面的都认为是前端的资源
+
+路由组件会自动收到路由给予的props属性: history、location、match…
+
+Link 无法自动实现高亮效果(需要native属性)，用NavLink可以自动实现
+
+<Switch>
+	<Router …>
+	<Router …>
+</Switch>
+
+Switch 的作用是 当匹配到第一个Router路径后，就不用再往下寻找了，直接返回第一个
+当前端路由不存在时，默认将public文件下的index.html返回
+路由严格匹配exact 不要随便开启, 有时候开启会导致无法匹配二级路由
+
+向路由组件传值:
+    1. 传递Params 参数
+        <Link to={`/home/message/detail/${id}/${title}`} …
+        <Router path=“/home/message/detail/:id/:title” …
+        const { match: {  params } } = this.props
+    2. 传递search参数
+        <Link to={`/home/message/detail/?id=${id}&title=${title} …
+        <Router path=“/home/message/detail” …
+        import qs from ‘querystring’
+        const { location: { search } } = this.props // search 为字符串?id=1&title=xxx
+        const obj = qs.parse(location)  // 注意问号
+    3. 传递state参数 (不要与类里的state搞混，不一样)
+        在地址栏里观察不到，且刷新也不会丢( 仅限<BrowserRouter>)
+        <Link to={{ pathname: '/home/message/detail', state: { id: '11', title: 'xxx' } }}...
+        <Router path=“/home/message/detail” …
+        const { location: { state } } = this.props
+
+路由跳转
+    两种模式: push/replace, 路由形成一个栈
+    push: 默认模式, 新路由记录推到栈顶， 回退时依次回退
+    replace: 
+        <Link replace to=...
+        不留痕迹，路由记录不推到栈顶，回退时回退到原来栈顶记录上一条
+       （可提升用户体验，当页面路由为一些琐碎重复度高的路由时，用户点击多个，后退时不会再依次回退这些琐碎路由）
+
+编程式路由导航
+    this.props.history.replace('/about', { id:'1',title:'xxx' }) // 如果携带state参数
+    this.props.history.push('/about')
+    this.props.history.goForward() 前进
+    this.props.history.goBack() 后退
+    this.props.history.go(num)  num > 0 前进几步， num < 0 后退几步
+
+WithRouter
+    export default withRouter(component)
+    让一般组件component加上特有的属性，从而拥有history等属性
+
+BrowserRouter与HashRouter的区别
+    1. 底层原理
+        BrowserRouter使用的是H5的history API，不兼容IE9及以下版本
+        HashRouter使用的是URL的哈希值，比BrowserRouter兼容性好(并不是指BrowserRouter兼容性不好)
+    2. path表现形式不一样
+        BrowserRouter的路径没有#
+    3. 刷新后对路由state参数的影响
+        BrowserRouter没有任何影响，因为state保存在history对象中
+        HashRouter刷新后会导致路由state参数丢失
+    4. 备注
+        HashRouter可以用于解决一些路径错误相关的问题
+        BrowserRouter 用的更多一点
+
+组件间通信
+    组件间函数传递，调用
+    PubSubJS 事件发布订阅js，组件之间灵活通信
+    redux: 独立于其他组件，集中式状态管理
+
+redux
+    ReactComponent -> ActionCreators -> Store     (dispatch(Action))
+    Store -> Reducers                             (真正处理，接收旧状态和action)
+    Reducers -> Store                             (返回新状态)
+    Store -> ReactComponent                       ( getState )
+

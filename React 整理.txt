@@ -76,14 +76,80 @@ BrowserRouter与HashRouter的区别
         BrowserRouter 用的更多一点
 
 组件间通信
-    组件间函数传递，调用
+    props: 组件间函数传递，调用
     PubSubJS 事件发布订阅js，组件之间灵活通信
     redux: 独立于其他组件，集中式状态管理
+    dva: 和redux一样是集中式状态管理
+    context: 生产者-消费者
 
-redux(第三方)
+redux(第三方) 见src/pages 案例
     ReactComponent -> ActionCreators -> Store     (dispatch(Action))
     Store -> Reducers                             (真正处理，接收旧状态和action)
     Reducers -> Store                             (返回新状态)
     Store -> ReactComponent                       ( getState )
 
     后面FaceBook自己出了官方的 react-redux
+
+serve
+    npm i serve -g 全局安装一个简易服务器
+    然后serve (或者 serve 文件夹)，启动一个服务器，打开(当前)文件夹
+
+setState的不同写法
+    1) 
+        setState({ 根据对象进行更新 }, () => {
+            // 状态更新完的回调,可选项
+        })
+    2) 
+        setState((state, props) => {
+            // 函数的结果进行状态更新，可以拿到旧state和props
+        }, () => {
+             // 状态更新完的回调,可选项
+        })
+
+懒加载
+    import { lazy, Suspense } from 'react'
+    const Main01 = lazy(() => import('./pages/reduxDemo1/Main'))
+    需要Suspense来提供加载过程中的视图，否则会报错
+    <Suspense fallback={<h1>Loading...</h1>}>
+          <Route path='/redux01' component={Main01} />
+    </Suspense>
+
+useEffect
+    useEffect函数的 返回函数 相当于类式组件 的 componentWillUnmount(), 将要卸载时回调
+    如 useEffect(() => {
+            // ...
+            return () => { console.log('将要卸载')  }
+        },[])       
+
+
+Component与PureComponent
+    component的问题
+        1. 只要执行setState, 即使不改变状态数据，组件也会重新render一下 => 效率低
+        2. 只要当前组件重新render，就会自动附带render子组件，纵使子组件没有用到父组件的任何数据 => 效率低
+    ↑原因
+        component 的 shouldComponentUpdate（控制是否执行重新渲染） 总是返回true
+    解决办法
+        extends PureComponent
+        但 PureComponent 的setState是地址比较， 
+            即当 const a = this.state()
+                a.name = 'aa'
+                this.setState(a)
+            这时候不会发生状态改变
+
+renderProps 插槽
+    适用于 预留一个空位，可以灵活的改变空位上的东西，即 向组件内部动态传入带内容的结构(标签)
+    class A ... {
+        render() return ({
+            ...
+            {this.props.render(传给外部的值)}
+
+    class Main ... {
+        render() return ({
+            ...
+            <A render={(A传来的值) => <C param = {A传来的值} />}
+      
+    在Main处使用A, A是父，C是子，将C插到A空白处，并可以将A处的值传给C
+
+错误边界 见src/pages/ErrorBoundary.js案例
+    用于且只能捕获后代组件生命周期产生的错误，不能捕获自己组件产生的错误和其它组件在合成事件、定时器中的错误
+    ---只能用于生产环境!!!!!!!!!---

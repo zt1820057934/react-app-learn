@@ -1,4 +1,3 @@
-import React from 'react'
 
 const initData = 0;
 // preState 上一状态，当第一次时，preState初始化为undefind, action 为随机值, 

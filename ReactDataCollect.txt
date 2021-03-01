@@ -13,7 +13,7 @@ React 整理
 BrowserRouter 不带’#’, 
 HashRouter带’#’, #/user/search  #后面的都认为是前端的资源
 
-路由组件会自动收到路由给予的props属性: history、location、match…
+路由组件(简单理解由Router装饰的组件)会自动收到路由给予的props属性: history、location、match…
 
 Link 无法自动实现高亮效果(需要native属性)，用NavLink可以自动实现
 
@@ -60,7 +60,7 @@ Switch 的作用是 当匹配到第一个Router路径后，就不用再往下寻
 
 WithRouter
     export default withRouter(component)
-    让一般组件component加上特有的属性，从而拥有history等属性
+    让一般组件(非路由组件)component加上路由组件特有的属性或方法，从而拥有history等属性
 
 BrowserRouter与HashRouter的区别
     1. 底层原理

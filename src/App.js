@@ -7,6 +7,7 @@ import { Main as Main02 } from './pages/reduxDemo2/Main'
 import { Main as Main03 } from './pages/reduxDemo3/Main'
 import { Main as Main04 } from './pages/reduxDemo4/Main'
 import { Main as Main05 } from './pages/reduxDemo5/Main'
+import Ui from './pages/ui/Ui'
 
 /*
 const Main01 = lazy(() => import('./pages/reduxDemo1/Main'))
@@ -19,6 +20,9 @@ const Main05 = lazy(() => import('./pages/reduxDemo5/Main'))
 function App() {
   return (
     <>
+      <h1>组件</h1>
+      <Ui/>
+      <hr/>
       <h1>路由</h1>
 
       <NavLink to='/redux01'>Redux示例一</NavLink>
